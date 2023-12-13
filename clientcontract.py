@@ -1,7 +1,7 @@
 import json
+
+from solcx import compile_standard
 from contractABC import ContractABC
-from solcx import compile_standard, install_solc
-install_solc('0.8.9')
 
 class ClientContract(ContractABC):
     def __init__(self, contract_path, w3provider, chain_id, sender_address):
@@ -10,20 +10,23 @@ class ClientContract(ContractABC):
 
     # Add the abstract methods from ContractABC
     def getBytecode(self, _compiled_sol):
-        return _compiled_sol['contracts']['Client.sol']['Client']['evm']['bytecode']['object']
+        return _compiled_sol['contracts']['Client.sol']['ClientUpdate']['evm']['bytecode']['object']
     def getAbi(self, _compiled_sol):
-        return _compiled_sol['contracts']['Client.sol']['Client']['abi']
-    def compileSol(self, _contract_file):
+        return _compiled_sol['contracts']['Client.sol']['ClientUpdate']['abi']
+    def compileSol(self, _contract_path):
+        with open(_contract_path, 'r') as file:
+            contract_file = file.read()
         compiled_sol = compile_standard(
             {
                 "language": "Solidity",
-                "sources": {"Client.sol": {"content": _contract_file}},
+                "sources": {"Client.sol": {"content": contract_file}},
                 "settings": {
                     "outputSelection": {
                         "*": {"*": ["abi", "metadata", "evm.bytecode", "evm.sourceMap"]}
                     }
                 },
             },
+            solc_version= "0.8.9",
         )
         return compiled_sol
 

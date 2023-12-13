@@ -1,6 +1,8 @@
 from client import Client
 import os
 from dotenv import load_dotenv
+from solcx import install_solc
+install_solc("0.8.9")
 load_dotenv()
 
 w3 = "https://sepolia.infura.io/v3/c0145f17136443228ae9d8ab299d3aac"
