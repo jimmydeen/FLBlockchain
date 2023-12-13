@@ -13,5 +13,3 @@ private_key = os.getenv("PRIVATE_KEY")
 testClient = Client(w3, my_address, private_key, chain_id)
 testClient.deployContract()
 testClient.submitUpdate("test")
-
-    

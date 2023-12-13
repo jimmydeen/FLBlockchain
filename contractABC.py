@@ -66,7 +66,7 @@ class ContractABC(ABC):
         # Send transacton
         send_txn = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
         tx_receipt = self.w3.eth.wait_for_transaction_receipt(send_txn)
-        print("Successfully sent update!")
+        print(f"Successfully sent update!, transaction hash: {tx_receipt.transactionHash.hex()}")
         print(update_tx.functions.retrieve().call())
         return tx_receipt
 
@@ -86,5 +86,5 @@ class ContractABC(ABC):
         # Update attributes
         self.deployed = 1
         self.contractAddress = tx_receipt.contractAddress
-        print("successfully deployed!")
+        print(f"successfully deployed! \n transaction hash: {tx_receipt.transactionHash.hex()}")
         return tx_receipt
