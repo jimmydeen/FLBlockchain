@@ -1,6 +1,11 @@
-Python 3.10.9
-solcx
-web3.py
+Python version: 3.10.9
+
+pip install:
+
+py-solc-x
+web3
+python-dotenv
+eth-account
 
 ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
 flwr 1.6.0 requires pycryptodome<4.0.0,>=3.18.0, but you have pycryptodome 3.15.0 which is incompatible.
