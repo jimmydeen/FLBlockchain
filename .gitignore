@@ -4,3 +4,4 @@ venv/
 venv/Lib/
 flower/__pycache__/
 /flower/data/
+/__pycache__/
