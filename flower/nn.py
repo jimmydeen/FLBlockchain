@@ -40,11 +40,24 @@ def train(net, trainloader, epochs):
   """Train the model on the training set."""
   criterion = torch.nn.CrossEntropyLoss()
   optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+  total_loss = 0.0
+  total_correct = 0
+  total_images = 0
   for _ in range(epochs):
     for images, labels in trainloader:
       optimizer.zero_grad()
-      criterion(net(images.to(DEVICE)), labels.to(DEVICE)).backward()
+      outputs = net(images.to(DEVICE))
+      loss = criterion(outputs, labels.to(DEVICE))
+      loss.backward()
       optimizer.step()
+
+      total_loss += loss.item() * images.size(0)
+      _, predicted = torch.max(outputs.data, 1)
+      total_correct += (predicted == labels.to(DEVICE)).sum().item()
+      total_images += images.size(0)
+  average_loss = total_loss / total_images
+  accuracy = total_correct / total_images
+  return average_loss, accuracy
 
 def test(net, testloader):
   """Validate the model on the test set."""
