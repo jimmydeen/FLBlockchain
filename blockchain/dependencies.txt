@@ -6,6 +6,8 @@ py-solc-x
 web3
 python-dotenv
 eth-account
+torch
+torchvision
 
 ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
 flwr 1.6.0 requires pycryptodome<4.0.0,>=3.18.0, but you have pycryptodome 3.15.0 which is incompatible.
