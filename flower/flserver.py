@@ -1,5 +1,6 @@
 import flwr as fl
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 from demostrategy import DemoStrategy
 strategy = DemoStrategy()
@@ -10,19 +11,24 @@ fl.server.start_server(
 )
 
 #plot
-
+# format percentage
+formatPercent = ticker.FuncFormatter(lambda x, _: '{:0.0f}%'.format(x*100))
 #plot loss
 plt.figure(figsize=(12,6))
 plt.subplot(1,2,1)
 plt.plot(range(len(strategy.losses)), strategy.losses, label= 'Loss')
-plt.legend()
+# plt.legend()
+plt.xlabel('Round')
+plt.ylabel('Loss')
 plt.title('Loss over rounds')
 
 # Plot accuracy
 
 plt.subplot(1,2,2)
 plt.plot(range(len(strategy.accuracies)), strategy.accuracies, label = 'Accuracy')
-plt.legend()
+plt.gca().yaxis.set_major_formatter(formatPercent)
+# plt.legend()
 plt.title('Accuracy over rounds')
-
+plt.xlabel('Round')
+plt.ylabel('Accuracy %')
 plt.show()
