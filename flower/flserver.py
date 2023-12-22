@@ -10,10 +10,10 @@ fl.server.start_server(
   config=fl.server.ServerConfig(num_rounds=5), strategy=strategy
 )
 
-#plot
+# Plot
 # format percentage
 formatPercent = ticker.FuncFormatter(lambda x, _: '{:0.0f}%'.format(x*100))
-#plot loss
+# Plot loss
 plt.figure(figsize=(12,6))
 plt.subplot(1,2,1)
 plt.plot(range(len(strategy.losses)), strategy.losses, label= 'Loss')
