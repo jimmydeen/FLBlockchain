@@ -2,11 +2,18 @@
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+uint16 constant THRESHOLD = 3;
 
 contract Coordinator is Ownable {
+    //Counter for global model updates
+    uint32 private updateCount;
 
     event GlobalModelUpdated(uint32 modelNumber);
 
+
+    event AggregationRequired(uint32 modelNumber, mapping(address => ModelUpdate) modelUpdates);
+
+    
     struct ModelUpdate {
         string updateHash;
         uint256 numDatapoints;
@@ -28,7 +35,11 @@ contract Coordinator is Ownable {
     function submitUpdate(string memory _updatehash, uint256 _numDatapoints) public {
         ModelUpdate memory update = ModelUpdate(_updatehash, _numDatapoints);
         modelUpdates[msg.sender] = update;
+        updateCount++;
 
+        if (updateCount >= THRESHOLD) {
+            emit AggregationRequired(updateCount, modelUpdates);
+        }
     }
 
     // To update global model

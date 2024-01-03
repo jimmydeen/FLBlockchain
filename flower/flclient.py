@@ -43,7 +43,7 @@ class FlowerClient(fl.client.NumPyClient, ABC):
     # Update the model with the latest parameters
     self.set_parameters(parameters)
     # Train model on dataset
-    loss, accuracy = train(self.net, self.getTrainLoader(), epochs=1)
+    loss, accuracy = self.net.train(self.net, self.getTrainLoader(), epochs=1)
     print(f"Accuracy: {accuracy}, Loss: {loss}")
     # Return updated model parameters, (config is not used), and length of dataset
     return self.get_parameters(config={}), len(self.getTrainLoader().dataset), {"accuracy": float(accuracy), "loss": float(loss)}
