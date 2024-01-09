@@ -11,9 +11,9 @@ contract Coordinator is Ownable {
     event GlobalModelUpdated(uint32 modelNumber);
 
 
-    event AggregationRequired(uint32 modelNumber, mapping(address => ModelUpdate) modelUpdates);
+    event AggregationRequired(uint32 modelNumber, ModelUpdate[] updates);
 
-    
+
     struct ModelUpdate {
         string updateHash;
         uint256 numDatapoints;
@@ -38,8 +38,16 @@ contract Coordinator is Ownable {
         updateCount++;
 
         if (updateCount >= THRESHOLD) {
-            emit AggregationRequired(updateCount, modelUpdates);
+            aggregateModel();
         }
+    }
+
+    function aggregateModel() private {
+        ModelUpdate[] memory updates = new ModelUpdate[](approvedTrainers.length);
+        for (uint i = 0; i < approvedTrainers.length; i++) {
+            updates[i] = modelUpdates[approvedTrainers[i]].updateHash;
+        }
+        emit AggregationRequired(globalModel.modelNumber, modelUpdates);
     }
 
     // To update global model
