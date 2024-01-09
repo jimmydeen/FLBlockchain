@@ -20,6 +20,7 @@ class ContractABC(ABC):
         self.contractAddress = None
 
 
+
     @abstractmethod
     def getBytecode(self, _compiled_sol):
         pass

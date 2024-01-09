@@ -10,7 +10,7 @@ from clientcontract import ClientContract
 # load_dotenv()
 # install_solc("0.8.9")
 class Client:
-    def __init__(self, w3_endpoint, _address, private_key, chain_id):
+    def __init__(self, w3_endpoint, _address, private_key, chain_id, contract_address, contract_abi):
         # Set client params
         self.w3_endpoint = Web3(Web3.HTTPProvider(w3_endpoint))
         self.address = _address
@@ -18,17 +18,21 @@ class Client:
         self.private_key = private_key
         self.chain_id = chain_id
         self.nonce = self.w3_endpoint.eth.get_transaction_count(self.address)
+        # Cretate contract instance
+        self.contract = self.w3_endpoint.eth.contract(address = contract_address, abi = contract_abi)
         # Create contract
-        self.contract = self.createContract("./ClientUpdate.sol", w3_endpoint)
-    def createContract(self, _contract_path, w3_endpoint):
-        """
-            Takes contract path as param, compiles and creates the contract, and
-            returns reference to contract
-        """
-        return ClientContract(_contract_path, w3_endpoint, self.chain_id, self.address)
+        # self.contract = self.createContract("./ClientUpdate.sol", w3_endpoint)
     
-    def deployContract(self):
-        self.contract.deployContract(self.getNonce(), self.private_key)
+    
+    # def createContract(self, _contract_path, w3_endpoint):
+    #     """
+    #         Takes contract path as param, compiles and creates the contract, and
+    #         returns reference to contract
+    #     """
+    #     return ClientContract(_contract_path, w3_endpoint, self.chain_id, self.address)
+    
+    # def deployContract(self):
+    #     self.contract.deployContract(self.getNonce(), self.private_key)
 
     def getNonce(self):
         return self.w3_endpoint.eth.get_transaction_count(self.address)
