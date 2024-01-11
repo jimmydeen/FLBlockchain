@@ -13,5 +13,8 @@ class AggregateListener(EventHandler):
             
     def handle_event(self, event):
         newModelNumber = event.args.modelNumber + 1
+
+        # Aggregate the data using weighted averaging (FedAvg)
+
         
 
