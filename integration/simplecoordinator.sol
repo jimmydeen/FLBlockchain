@@ -6,7 +6,7 @@ using SafeMath for int16;
 using SafeMath for int256;
 
 contract SimpleCoordinator is Ownable {
-
+    event UpdateSubmitted(address indexed _trainer, int256 indexed _numDatapoints, int256 indexed _reward);
     int256 public incentivePerDatapoint;
     int16 public numberUpdatesRequested;
     int256 public maxDataPoints;
@@ -17,7 +17,7 @@ contract SimpleCoordinator is Ownable {
         maxDataPoints = _maxDataPoints;
         // Ensure contract has enough balance for maximum number of data points requested
         require(msg.value >= (incentivePerDatapoint.mul(maxDataPoints)), "Not enough deposit");
-
+        
     }
 
     function setIncentive(int256 _incentive) public onlyOwner {
@@ -27,6 +27,7 @@ contract SimpleCoordinator is Ownable {
         int256 reward = (_numDatapoints.mul(incentivePerDatapoint)).div(numberUpdatesRequested);
         require(address(this).balance >= reward, "Not enough balance");
         payable(msg.sender).transfer(reward);
+        emit UpdateSubmitted(msg.sender, _numDatapoints, reward);
     }
 
     function distributeIncentive(address _trainer) {

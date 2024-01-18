@@ -8,15 +8,21 @@ import torch
 from nn import Net, test, train, DEVICE
 from collections import OrderedDict
 from abc import ABC, abstractmethod
+from web3 import Web3
 
 
 
 # Define Flower client, base class (abstract)
 
 class FlowerClient(fl.client.NumPyClient, ABC):
-  def __init__(self):
+  def __init__(self, _client_address, _client_pk, _web3_endpoint, _contract_address, _contract_abi):
     super().__init__()
     self.net = Net().to(DEVICE)
+    self.address = _client_address
+    self.pk = _client_pk
+    self.web3 = Web3(Web3.HTTPProvider(_web3_endpoint))
+    assert self.web3.isConnected(), "Web3 connection failed"
+    self.contract = self.web3.eth.contract(address=_contract_address, abi=_contract_abi)
 
   @abstractmethod
   def getTrainLoader(self):
@@ -47,6 +53,17 @@ class FlowerClient(fl.client.NumPyClient, ABC):
     print(f"Accuracy: {accuracy}, Loss: {loss}")
     with open('log.txt', 'a') as f:
       f.write(f"Accuracy: {accuracy}, Loss: {loss} \n")
+    
+    # Log update on blockchain
+    tx = self.contract.functions.submitUpdate(len(self.getTrainLoader().dataset)).transact({'from': self.address})
+
+    # WHEN METAMASK LINKED NO NEED FOR SIGNING MANUAL
+
+    signed_tx = self.web3.eth.account.signTransaction(tx, private_key=self.pk)
+
+    tx_hash = self.web3.eth.sendRawTransaction(signed_tx.rawTransaction)
+
+    
     # Return updated model parameters, (config is not used), and length of dataset
     return self.get_parameters(config={}), len(self.getTrainLoader().dataset), {"accuracy": float(accuracy), "loss": float(loss)}
 
