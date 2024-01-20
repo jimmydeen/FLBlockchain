@@ -3,6 +3,8 @@ from flclient import FlowerClient
 import flwr as fl
 
 class c3(FlowerClient):
+    def __init__(self, _client_address, _client_pk, _web3_endpoint, _contract_address, _contract_abi):
+        super().__init__(_client_address, _client_pk, _web3_endpoint, _contract_address, _contract_abi)
     def getTrainLoader(self):
         return mnist_train_loader_client3
     def getTestLoader(self):

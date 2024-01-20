@@ -2,10 +2,11 @@ import sys
 sys.path.append('/Users/jd/Desktop/work/FLBlockchain/blockchain')
 
 from contractABC import ContractABC
-from solcx import compile_standard
+from solcx import compile_standard, install_solc
 import json
 
 
+install_solc("v0.8.20")
 
 class CoordinatorContract(ContractABC):
 
@@ -32,7 +33,7 @@ class CoordinatorContract(ContractABC):
                     }
                 },
             },
-            solc_version= "0.8.9",
+            solc_version= "0.8.20",
         )
 
         return compiled_sol
@@ -52,7 +53,7 @@ class CoordinatorContract(ContractABC):
             "chainId": self.chain_id,
             "from": self.sender_address,
             "nonce": nonce,
-            "value": self.w3.toWei(stake, "ether")
+            "value": self.w3.to_wei(stake, "ether")
         })
         # Sign and send
         signed = self.w3.eth.account.sign_transaction(deploy_txn, private_key=self.private_key)
