@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-using SafeMath for int16;
-using SafeMath for int256;
 
 contract SimpleCoordinator is Ownable {
     event UpdateSubmitted(address indexed _trainer, int256 indexed _numDatapoints, int256 indexed _reward);
@@ -16,7 +13,7 @@ contract SimpleCoordinator is Ownable {
         numberUpdatesRequested = _numberUpdatesRequested;
         maxDataPoints = _maxDataPoints;
         // Ensure contract has enough balance for maximum number of data points requested
-        require(msg.value >= (incentivePerDatapoint.mul(maxDataPoints)), "Not enough deposit");
+        require(msg.value >= (incentivePerDatapoint * (maxDataPoints)), "Not enough deposit");
         
     }
 
@@ -24,7 +21,7 @@ contract SimpleCoordinator is Ownable {
         incentivePerDatapoint = _incentive;
     }
     function submitUpdate(int256 _numDatapoints) public payable {
-        int256 reward = (_numDatapoints.mul(incentivePerDatapoint)).div(numberUpdatesRequested);
+        int256 reward = (_numDatapoints * (incentivePerDatapoint)) / (numberUpdatesRequested);
         require(address(this).balance >= reward, "Not enough balance");
         payable(msg.sender).transfer(reward);
         emit UpdateSubmitted(msg.sender, _numDatapoints, reward);

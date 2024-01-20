@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '../blockchain/')
+sys.path.append('/Users/jd/Desktop/work/FLBlockchain/blockchain')
 
 from contractABC import ContractABC
 from solcx import compile_standard
@@ -45,14 +45,14 @@ class CoordinatorContract(ContractABC):
         return data.encode()
 
     # Deploy with a payment of 0.5 ETH
-    def deployContract(self):
+    def deployContract(self, incentive, numberUpdatesRequested, maxDataPoints, stake):
         nonce = self.w3.eth.get_transaction_count(self.sender_address)
         # Build deployment transaction
-        deploy_txn = self.contract.constructor().build_transaction({
+        deploy_txn = self.contract.constructor(incentive, numberUpdatesRequested, maxDataPoints).build_transaction({
             "chainId": self.chain_id,
             "from": self.sender_address,
             "nonce": nonce,
-            "value": self.w3.toWei(0.5, "ether")
+            "value": self.w3.toWei(stake, "ether")
         })
         # Sign and send
         signed = self.w3.eth.account.sign_transaction(deploy_txn, private_key=self.private_key)

@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// Give me boilerplate smart contract code
 pragma solidity >=0.6.0 <0.9.0;
 
 contract ClientUpdate {
