@@ -87,5 +87,7 @@ class ContractABC(ABC):
         # Update attributes
         self.deployed = 1
         self.contractAddress = tx_receipt.contractAddress
+        # get abi of contract
+
         print(f"successfully deployed! \n transaction hash: {tx_receipt.transactionHash.hex()}")
         return tx_receipt

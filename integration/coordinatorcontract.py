@@ -63,4 +63,5 @@ class CoordinatorContract(ContractABC):
         # Set contract address
         self.contractAddress = tx_receipt.contractAddress
         self.deployed = 1
+
         return tx_receipt

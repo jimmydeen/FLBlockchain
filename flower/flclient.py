@@ -22,7 +22,7 @@ class FlowerClient(fl.client.NumPyClient, ABC):
     self.pk = _client_pk
     self.web3 = Web3(Web3.HTTPProvider(_web3_endpoint))
     self.chain_id = _chainid
-    assert self.web3.isConnected(), "Web3 connection failed"
+    assert self.web3.is_connected(), "Web3 connection failed"
     self.contract = self.web3.eth.contract(address=_contract_address, abi=_contract_abi)
 
   @abstractmethod
@@ -55,11 +55,12 @@ class FlowerClient(fl.client.NumPyClient, ABC):
     with open('log.txt', 'a') as f:
       f.write(f"Accuracy: {accuracy}, Loss: {loss} \n")
     
-    # Log update on blockchain
-    tx = self.contract.functions.submitUpdate(len(self.getTrainLoader().dataset)).transact({'from': self.address, 'chainId': self.chain_id, "nonce": self.web3.eth.getTransactionCount(self.address)})
+    # tx = self.contract.functions.submitUpdate(len(self.getTrainLoader().dataset)).transact({'from': self.address, 'chainId': self.chain_id, "nonce": self.web3.eth.get_transaction_count(self.address)})
 
     # WHEN METAMASK LINKED NO NEED FOR SIGNING MANUAL
 
+    # build transaction
+    tx = self.contract.functions.submitUpdate(len(self.getTrainLoader().dataset)).build_transaction({'from': self.address, 'chainId': self.chain_id, "nonce": self.web3.eth.get_transaction_count(self.address)})
     signed_tx = self.web3.eth.account.sign_transaction(tx, private_key=self.pk)
 
     tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)

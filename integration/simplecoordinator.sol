@@ -13,7 +13,7 @@ contract SimpleCoordinator is Ownable(msg.sender) {
         numberUpdatesRequested = _numberUpdatesRequested;
         maxDataPoints = _maxDataPoints;
         // Ensure contract has enough balance for maximum number of data points requested
-        require(msg.value >= (incentivePerDatapoint * (maxDataPoints)), "Not enough deposit");
+        // require(msg.value >= (incentivePerDatapoint * (maxDataPoints)), "Not enough deposit");
         
     }
 
@@ -22,7 +22,7 @@ contract SimpleCoordinator is Ownable(msg.sender) {
     }
     function submitUpdate(uint256 _numDatapoints) public payable {
         uint256 reward = (_numDatapoints * (incentivePerDatapoint)) / (numberUpdatesRequested);
-        require(address(this).balance >= reward, "Not enough balance");
+        // require(address(this).balance >= reward, "Not enough balance");
         payable(msg.sender).transfer(reward);
         emit UpdateSubmitted(msg.sender, _numDatapoints, reward);
     }
