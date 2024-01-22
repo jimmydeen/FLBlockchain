@@ -4,6 +4,7 @@ import {Ownable} from "/Users/jd/Desktop/work/FLBlockchain/integration/Ownable.s
 
 contract SimpleCoordinator is Ownable(msg.sender) {
     event UpdateSubmitted(address indexed _trainer, uint256 indexed _numDatapoints, uint256 indexed _reward);
+    event IncentiveDistributed(address indexed _trainer, uint256 indexed _reward);
     uint256 public incentivePerDatapoint;
     uint16 public numberUpdatesRequested;
     uint256 public maxDataPoints;
@@ -13,21 +14,30 @@ contract SimpleCoordinator is Ownable(msg.sender) {
         numberUpdatesRequested = _numberUpdatesRequested;
         maxDataPoints = _maxDataPoints;
         // Ensure contract has enough balance for maximum number of data points requested
-        // require(msg.value >= (incentivePerDatapoint * (maxDataPoints)), "Not enough deposit");
+        require(msg.value >= (incentivePerDatapoint * (maxDataPoints)), "Not enough deposit");
         
     }
 
     function setIncentive(uint256 _incentiveInWei) public onlyOwner {
         incentivePerDatapoint = _incentiveInWei;
     }
+
     function submitUpdate(uint256 _numDatapoints) public payable {
-        uint256 reward = (_numDatapoints * (incentivePerDatapoint)) / (numberUpdatesRequested);
-        // require(address(this).balance >= reward, "Not enough balance");
-        payable(msg.sender).transfer(reward);
+        submitUpdate(_numDatapoints, 0);
+    }
+    function submitUpdate(uint256 _numDatapoints, uint256 _gasEstimate) public payable {
+        // Calculate reward
+        uint256 reward = (_numDatapoints * (incentivePerDatapoint)) / (numberUpdatesRequested) + _gasEstimate;
+        // Send reward to trainer via distributeIncentive
+        distributeIncentive(msg.sender, reward);
         emit UpdateSubmitted(msg.sender, _numDatapoints, reward);
     }
 
-    function distributeIncentive(address _trainer) private {
+    function distributeIncentive(address _trainer, uint256 rewardAmount) private {
+        require(address(this).balance >= rewardAmount, "Not enough balance");
+        payable(_trainer).transfer(rewardAmount);
+        emit IncentiveDistributed(_trainer, rewardAmount);
+
 
     }
 }

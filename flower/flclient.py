@@ -58,9 +58,10 @@ class FlowerClient(fl.client.NumPyClient, ABC):
     # tx = self.contract.functions.submitUpdate(len(self.getTrainLoader().dataset)).transact({'from': self.address, 'chainId': self.chain_id, "nonce": self.web3.eth.get_transaction_count(self.address)})
 
     # WHEN METAMASK LINKED NO NEED FOR SIGNING MANUAL
-
+    # Estimate gas cost of submitUpdate function
+    gas_estimate = self.contract.functions.submitUpdate(len(self.getTrainLoader().dataset)).estimate_gas({'from': self.address, 'chainId': self.chain_id, "nonce": self.web3.eth.get_transaction_count(self.address)})
     # build transaction
-    tx = self.contract.functions.submitUpdate(len(self.getTrainLoader().dataset)).build_transaction({'from': self.address, 'chainId': self.chain_id, "nonce": self.web3.eth.get_transaction_count(self.address)})
+    tx = self.contract.functions.submitUpdate(len(self.getTrainLoader().dataset), gas_estimate).build_transaction({'from': self.address, 'chainId': self.chain_id, "nonce": self.web3.eth.get_transaction_count(self.address)})
     signed_tx = self.web3.eth.account.sign_transaction(tx, private_key=self.pk)
 
     tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
