@@ -47,11 +47,13 @@ if __name__ == "__main__":
 
 @app.route('/start_server', methods=['POST'])
 def start_server():
-    subprocess.Popen(["python", "flower/flserver.py"])
+    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py"])
     return 'Server started', 200
 
-@app.route('/start_client', methods=['POST'])
-def start_client():
+# Demo Endpoints
+
+@app.route('/start_client1', methods=['POST'])
+def start_client_1():
     _client_address = request.json.get('_client_address')
     _client_pk = request.json.get('_client_pk')
     _web3_endpoint = request.json.get('_web3_endpoint')
@@ -61,9 +63,40 @@ def start_client():
     server_address = request.json.get('server_address')
 
     # Start c1.py with the provided parameters
-    subprocess.Popen(['python', 'c1.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), server_address])
+    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c1.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), server_address])
 
-    return 'Client started', 200
+    return 'Client 1 started', 200
+
+@app.route('/start_client2', methods=['POST'])
+def start_client_2():
+    _client_address = request.json.get('_client_address')
+    _client_pk = request.json.get('_client_pk')
+    _web3_endpoint = request.json.get('_web3_endpoint')
+    _chainid = request.json.get('_chainid')
+    _contract_address = request.json.get('_contract_address')
+    _contract_abi = request.json.get('_contract_abi')
+    server_address = request.json.get('server_address')
+
+    # Start c1.py with the provided parameters
+    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c2.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), server_address])
+
+    return 'Client 2 started', 200
+
+@app.route('/start_client3', methods=['POST'])
+def start_client_3():
+    _client_address = request.json.get('_client_address')
+    _client_pk = request.json.get('_client_pk')
+    _web3_endpoint = request.json.get('_web3_endpoint')
+    _chainid = request.json.get('_chainid')
+    _contract_address = request.json.get('_contract_address')
+    _contract_abi = request.json.get('_contract_abi')
+    server_address = request.json.get('server_address')
+
+    # Start c1.py with the provided parameters
+    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c3.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), server_address])
+
+    return 'Client 3 started', 200
+
 
 @app.route('/deploy_contract', methods=['POST'])
 def deploy_contract():
@@ -86,7 +119,7 @@ def deploy_contract():
     # # Call the deployContract method
     # contract.deployContract(incentive, numberUpdatesRequested, maxDataPoints, stake)
 
-    
+
 
     return 'Contract deployed', 200
 
