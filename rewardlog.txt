@@ -1,5 +1,21 @@
-Tx Hash: 0xebdc6c062aa7d414f03005a0cf9c6af8898ab03f27702f0985c30dde949f6527 Incentive event received from client: 0xA358910B8b245EC4B8EB558114e926C3F9b3d43D 
-. Reward Amount: 436932 
-.Tx Hash: 0x6eb025cb7e51adf63a22d83a73052b4aee45e9a7750803503dd14a6f900118bc Incentive event received from client: 0xea89364668B868Df6B3a691dd3A8DE15E10f2b9c 
-. Reward Amount: 436932 
+Tx Hash: 0xf81a173d79b5562558ea973ac7d393d15d25f66b78204593347206f2b345dca2 Incentive event received from client: 0xea89364668B868Df6B3a691dd3A8DE15E10f2b9c 
+. Reward Amount: 40037296 
+.Tx Hash: 0x480680394e4cedaf379b1430fd3487931c2c7166ab0ca4f1684655362cab90c9 Incentive event received from client: 0xA358910B8b245EC4B8EB558114e926C3F9b3d43D 
+. Reward Amount: 40037296 
+.Tx Hash: 0x281c053bc75d08d912a93ccfd7f4ce1585fd1ec83739f7bafe7f8db7e13b58b5 Incentive event received from client: 0xA358910B8b245EC4B8EB558114e926C3F9b3d43D 
+. Reward Amount: 40037296 
+.Tx Hash: 0xa8d98337c277e6c4f8ad5af1f73db77fac380aaa21f3dca49a5f640f6877f3ad Incentive event received from client: 0xea89364668B868Df6B3a691dd3A8DE15E10f2b9c 
+. Reward Amount: 40037296 
+.Tx Hash: 0x69354776216002a1628475ab65011d95cfbc7d89c507f835ed834069d0235ef7 Incentive event received from client: 0xA358910B8b245EC4B8EB558114e926C3F9b3d43D 
+. Reward Amount: 40037296 
+.Tx Hash: 0xd88b13f3b842908fa180aa4ee8cfa2000c8d457b3932fb9fba18025bbeb3070d Incentive event received from client: 0xea89364668B868Df6B3a691dd3A8DE15E10f2b9c 
+. Reward Amount: 40037296 
+.Tx Hash: 0x7a93a52095e1376a649bdfc31b91946e60fc31a829bf0471b8b3aaada18c846d Incentive event received from client: 0xA358910B8b245EC4B8EB558114e926C3F9b3d43D 
+. Reward Amount: 40037296 
+.Tx Hash: 0xc7c470af60b1e473fd67865e95f3cc29564e17bea4f8dea092f1463d1268f88a Incentive event received from client: 0xea89364668B868Df6B3a691dd3A8DE15E10f2b9c 
+. Reward Amount: 40037296 
+.Tx Hash: 0xf3aeb2d5940e465bb4b06aa68a5e4ff95948746620de32f32517d4e91282826b Incentive event received from client: 0xea89364668B868Df6B3a691dd3A8DE15E10f2b9c 
+. Reward Amount: 40037296 
+.Tx Hash: 0x650969647c2fa3034eeb1be357d946b0f4aa292d0b5ca30ac9fc1dbd4f5872b6 Incentive event received from client: 0xA358910B8b245EC4B8EB558114e926C3F9b3d43D 
+. Reward Amount: 40037296 
 .
