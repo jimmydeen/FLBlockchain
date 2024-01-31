@@ -77,11 +77,16 @@ def deploy_contract():
     maxDataPoints = request.json.get('maxDataPoints')
     stake = request.json.get('stake')
 
-    # Instantiate the CoordinatorContract class
-    contract = CoordinatorContract(contract_path, w3provider, chain_id, sender_address, private_key)
 
-    # Call the deployContract method
-    contract.deployContract(incentive, numberUpdatesRequested, maxDataPoints, stake)
+
+
+    # # Instantiate the CoordinatorContract class
+    # contract = CoordinatorContract(contract_path, w3provider, chain_id, sender_address, private_key)
+
+    # # Call the deployContract method
+    # contract.deployContract(incentive, numberUpdatesRequested, maxDataPoints, stake)
+
+    
 
     return 'Contract deployed', 200
 
