@@ -7,7 +7,9 @@ import os
 import json
 
 app = Flask(__name__)
-server_started = False
+# Global variables for demo
+SERVER_STARTED = False
+SERVER_ADDRESS = None
 
 @app.route('/download_client', methods=['POST'])
 def download_client():
@@ -48,10 +50,13 @@ if __name__ == "__main__":
 
 @app.route('/start_server', methods=['POST'])
 def start_server():
-    global server_started
+
+    global SERVER_STARTED
+    global SERVER_ADDRESS
+    SERVER_ADDRESS = request.json.get('_server_address')
     subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py"])
     
-    server_started = True
+    SERVER_STARTED = True
     return 'Server started', 200
 
 # Demo Endpoints
@@ -133,10 +138,10 @@ def deploy_contract():
 
 @app.route('/check_server', methods=['GET'])
 def check_server():
-    if server_started:
+    if SERVER_STARTED:
         return jsonify({
             'message': 'Server started',
-            # 'server_address': server_address,
+            'server_address': SERVER_ADDRESS,
             # 'other_param': other_param
         }), 200
     else:
