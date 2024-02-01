@@ -13,7 +13,7 @@ class UpdateListener(EventHandler):
         
 
     def handle_event(self, event):
-        with open ('log.txt', 'a') as f:
+        with open ('log.txt', 'w') as f:
             f.write(f"Tx Hash: {event.transactionHash.hex()} Update event received from client: {event.args._trainer} \n. Number of data points: {event.args._numDatapoints} \n. Reward amount: {event.args._reward} \n.")
 
 if __name__ == "__main__":

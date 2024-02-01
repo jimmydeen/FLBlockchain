@@ -15,7 +15,7 @@ class IncentiveListener(EventHandler):
         
 
     def handle_event(self, event):
-        with open ('rewardlog.txt', 'a') as f:
+        with open ('rewardlog.txt', 'w') as f:
             f.write(f"Tx Hash: {event.transactionHash.hex()} Incentive event received from client: {event.args._trainer} \n. Reward Amount: {event.args._reward} \n.")
 
 

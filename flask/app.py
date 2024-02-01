@@ -188,15 +188,27 @@ def get_events():
     log_exists = False
     reward_exists = False
     update_exists = False
-    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/integration/rewardlog.txt"):
-        with open("/Users/jd/Desktop/work/FLBlockchain/integration/rewardlog.txt", 'r') as f:
+    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/rewardlog.txt"):
+        with open("/Users/jd/Desktop/work/FLBlockchain/rewardlog.txt", 'r') as f:
             rewardlog = f.read()
-            reward_exists = True
+            if rewardlog == "":
+                reward_exists = False
+            else:
 
-    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/integration/log.txt"):
-        with open("/Users/jd/Desktop/work/FLBlockchain/integration/log.txt", 'r') as f:
+                reward_exists = True
+        #clear file
+        open("/Users/jd/Desktop/work/FLBlockchain/rewardlog.txt", 'w').close()
+            
+
+    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/log.txt"):
+        with open("/Users/jd/Desktop/work/FLBlockchain/log.txt", 'r') as f:
             log = f.read()
-            log_exists = True
+            if log == "":
+                log_exists = False
+            else:
+                log_exists = True
+        #clear file
+        open("/Users/jd/Desktop/work/FLBlockchain/log.txt", 'w').close()
 
     if (log_exists and reward_exists):
         update_exists = True
