@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify, session
 import sys
 sys.path.append('/Users/jd/Desktop/work/FLBlockchain/integration/')
 from coordinatorcontract import CoordinatorContract
@@ -8,8 +8,10 @@ import json
 
 app = Flask(__name__)
 # Global variables for demo
-SERVER_STARTED = False
-SERVER_ADDRESS = None
+
+SERVER_DATA_FILE = "/Users/jd/Desktop/work/FLBlockchain//server_data.json"
+app.secret_key = "demo"
+
 
 @app.route('/download_client', methods=['POST'])
 def download_client():
@@ -51,12 +53,26 @@ if __name__ == "__main__":
 @app.route('/start_server', methods=['POST'])
 def start_server():
 
-    global SERVER_STARTED
-    global SERVER_ADDRESS
-    SERVER_ADDRESS = request.json.get('_server_address')
+
+    # global SERVER_STARTED
+    # global SERVER_ADDRESS
+    server_address = request.json.get('_server_address')
+    
+    if os.path.exists(SERVER_DATA_FILE):
+        with open(SERVER_DATA_FILE, 'r') as f:
+            server_data = json.load(f)
+    else:
+        server_data = {}
+   
+    server_data["server_started"] = True
+    server_data["server_address"] = server_address
+    #start reward and update listeners
+    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/rewardlistener.py"])
+    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/updatelistener.py"])
     subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py"])
     
-    SERVER_STARTED = True
+    with open(SERVER_DATA_FILE, 'w') as f:
+        json.dump(server_data, f)
     return 'Server started', 200
 
 # Demo Endpoints
@@ -119,6 +135,18 @@ def deploy_contract():
     maxDataPoints = request.json.get('maxDataPoints')
     stake = request.json.get('stake')
 
+    # write the w3provider, chain_id to SERVER_DATA_FILE
+    if os.path.exists(SERVER_DATA_FILE):
+        with open(SERVER_DATA_FILE, 'r') as f:
+            server_data = json.load(f)
+    else:
+        server_data = {}
+
+    server_data["w3provider"] = w3provider
+    server_data["chain_id"] = chain_id
+
+    with open(SERVER_DATA_FILE, 'w') as f:
+        json.dump(server_data, f)
 
     subprocess.run(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/deploycontract.py", w3provider, str(chain_id), sender_address, private_key, str(incentive), str(numberUpdatesRequested), str(maxDataPoints), str(stake)])
 
@@ -138,11 +166,19 @@ def deploy_contract():
 
 @app.route('/check_server', methods=['GET'])
 def check_server():
-    if SERVER_STARTED:
+    if os.path.exists(SERVER_DATA_FILE):
+        with open(SERVER_DATA_FILE, 'r') as f:
+            server_data = json.load(f)
+    else:
+        server_data = {
+            'server_started': False,
+            'server_address': None
+        }
+
+    if server_data['server_started']:
         return jsonify({
             'message': 'Server started',
-            'server_address': SERVER_ADDRESS,
-            # 'other_param': other_param
+            'server_address': server_data['server_address']
         }), 200
     else:
         return 'Server not started', 202

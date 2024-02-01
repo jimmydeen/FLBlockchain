@@ -18,5 +18,17 @@ contract_abi = contract.abi
 with open('/Users/jd/Desktop/work/FLBlockchain/integration/contract_data.json', 'w') as f:
     json.dump({"address": contract_address, "abi": contract_abi}, f)
 
+# Write to SERVER_DATA_FILE for demo
+    
+with open('/Users/jd/Desktop/work/FLBlockchain/flask/serverdata.json', 'r') as f:
+    server_data = json.load(f)
+
+server_data["contract_address"] = contract_address
+server_data["contract_abi"] = contract_abi
+
+with open('/Users/jd/Desktop/work/FLBlockchain/flask/serverdata.json', 'w') as f:
+    json.dump(server_data, f)
+
+
 
 print("contract deploy success!")
