@@ -183,6 +183,32 @@ def check_server():
     else:
         return 'Server not started', 202
 
+@app.route('/get_events', methods=['GET'])
+def get_events():
+    log_exists = False
+    reward_exists = False
+    update_exists = False
+    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/integration/rewardlog.txt"):
+        with open("/Users/jd/Desktop/work/FLBlockchain/integration/rewardlog.txt", 'r') as f:
+            rewardlog = f.read()
+            reward_exists = True
+
+    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/integration/log.txt"):
+        with open("/Users/jd/Desktop/work/FLBlockchain/integration/log.txt", 'r') as f:
+            log = f.read()
+            log_exists = True
+
+    if (log_exists and reward_exists):
+        update_exists = True
+
+    if update_exists == True:
+
+        return jsonify({
+            'rewardlog': rewardlog,
+            'log': log
+        }), 200
+    else:
+        return "No events yet", 202
 
 if __name__ == '__main__':
     app.run(port=5000)
