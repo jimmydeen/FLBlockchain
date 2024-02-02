@@ -81,14 +81,18 @@ def start_server():
 def start_client_1():
     _client_address = request.json.get('_client_address')
     _client_pk = request.json.get('_client_pk')
-    _web3_endpoint = request.json.get('_web3_endpoint')
-    _chainid = request.json.get('_chainid')
-    _contract_address = request.json.get('_contract_address')
-    _contract_abi = request.json.get('_contract_abi')
-    server_address = request.json.get('server_address')
+    # Load data from SERVER_DATA_FILE
+    with open(SERVER_DATA_FILE, 'r') as f:
+        server_data = json.load(f)
+    
+    _web3_endpoint = server_data["w3provider"]
+    _chainid = server_data["chain_id"]
+    _contract_address = server_data["contract_address"]
+    _contract_abi = server_data["contract_abi"]
+    _server_address = server_data["server_address"]
 
     # Start c1.py with the provided parameters
-    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c1.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), server_address])
+    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c1.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), _server_address])
 
     return 'Client 1 started', 200
 
@@ -96,14 +100,17 @@ def start_client_1():
 def start_client_2():
     _client_address = request.json.get('_client_address')
     _client_pk = request.json.get('_client_pk')
-    _web3_endpoint = request.json.get('_web3_endpoint')
-    _chainid = request.json.get('_chainid')
-    _contract_address = request.json.get('_contract_address')
-    _contract_abi = request.json.get('_contract_abi')
-    server_address = request.json.get('server_address')
+    with open(SERVER_DATA_FILE, 'r') as f:
+        server_data = json.load(f)
+    
+    _web3_endpoint = server_data["w3provider"]
+    _chainid = server_data["chain_id"]
+    _contract_address = server_data["contract_address"]
+    _contract_abi = server_data["contract_abi"]
+    _server_address = server_data["server_address"]
 
     # Start c1.py with the provided parameters
-    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c2.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), server_address])
+    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c2.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), _server_address])
 
     return 'Client 2 started', 200
 
@@ -111,14 +118,17 @@ def start_client_2():
 def start_client_3():
     _client_address = request.json.get('_client_address')
     _client_pk = request.json.get('_client_pk')
-    _web3_endpoint = request.json.get('_web3_endpoint')
-    _chainid = request.json.get('_chainid')
-    _contract_address = request.json.get('_contract_address')
-    _contract_abi = request.json.get('_contract_abi')
-    server_address = request.json.get('server_address')
+    with open(SERVER_DATA_FILE, 'r') as f:
+        server_data = json.load(f)
+    
+    _web3_endpoint = server_data["w3provider"]
+    _chainid = server_data["chain_id"]
+    _contract_address = server_data["contract_address"]
+    _contract_abi = server_data["contract_abi"]
+    _server_address = server_data["server_address"]
 
     # Start c1.py with the provided parameters
-    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c3.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), server_address])
+    subprocess.Popen(['python', '/Users/jd/Desktop/work/FLBlockchain/flower/c3.py', _client_address, _client_pk, _web3_endpoint, str(_chainid), _contract_address, json.dumps(_contract_abi), _server_address])
 
     return 'Client 3 started', 200
 
@@ -210,7 +220,7 @@ def get_events():
         #clear file
         open("/Users/jd/Desktop/work/FLBlockchain/log.txt", 'w').close()
 
-    if (log_exists and reward_exists):
+    if (log_exists or reward_exists):
         update_exists = True
 
     if update_exists == True:
