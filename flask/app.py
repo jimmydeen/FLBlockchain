@@ -52,23 +52,32 @@ if __name__ == "__main__":
 
 @app.route('/start_server', methods=['POST'])
 def start_server():
-
-
-    # global SERVER_STARTED
-    # global SERVER_ADDRESS
     server_address = request.json.get('_server_address')
     
     if os.path.exists(SERVER_DATA_FILE):
         with open(SERVER_DATA_FILE, 'r') as f:
             server_data = json.load(f)
     else:
-        server_data = {}
-   
+        raise LookupError("Server data file not found")
+    
     server_data["server_started"] = True
     server_data["server_address"] = server_address
-    #start reward and update listeners
-    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/rewardlistener.py"])
-    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/updatelistener.py"])
+
+    # Load parameters from serverdata, to pass into rewardlistener and updatelistener
+    w3provider = server_data.get("w3provider")
+    contract_address = server_data.get("contract_address")
+    contract_abi = server_data.get("contract_abi")
+    
+    if w3provider is None or contract_address is None or contract_abi is None:
+        raise ValueError("Missing parameters in server data")
+
+    # Start reward listener process with parameters
+    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/rewardlistener.py", w3provider, contract_address, contract_abi])
+
+    # Start update listener process with parameters
+    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/updatelistener.py", w3provider, contract_address, contract_abi])
+
+    # Start server
     subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py"])
     
     with open(SERVER_DATA_FILE, 'w') as f:

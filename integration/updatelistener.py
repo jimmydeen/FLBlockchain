@@ -3,13 +3,12 @@ from web3 import Web3
 import json
 import datetime
 import fcntl
+import sys
 
 class UpdateListener(EventHandler):
     def __init__(self, w3, contract_address, contract_abi):
         super().__init__(w3, contract_address, contract_abi)
         self.event_filter = self.contract_instance.events.UpdateSubmitted.create_filter(fromBlock="latest")
-        
-        
 
     def handle_event(self, event):
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -23,10 +22,8 @@ class UpdateListener(EventHandler):
             fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock
 
 if __name__ == "__main__":
-    with open('/Users/jd/Desktop/work/FLBlockchain/integration/contract_data.json', 'r') as f:
-        data = json.load(f)
-    
-    contract_address = data["address"]
-    contract_abi = data["abi"]
-    listener = UpdateListener("https://sepolia.infura.io/v3/c0145f17136443228ae9d8ab299d3aac", contract_address, contract_abi)
+    web3endpoint = sys.argv[1]
+    contract_address = sys.argv[2]
+    contract_abi = sys.argv[3]
+    listener = UpdateListener(web3endpoint, contract_address, contract_abi)
     listener.listen()

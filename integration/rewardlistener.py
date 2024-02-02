@@ -5,7 +5,7 @@ from web3 import Web3
 import json
 import datetime
 import fcntl
-
+import sys
 class IncentiveListener(EventHandler):
     def __init__(self, w3, contract_address, contract_abi):
         super().__init__(w3, contract_address, contract_abi)
@@ -26,10 +26,8 @@ class IncentiveListener(EventHandler):
 
 
 if __name__ == "__main__":
-    with open('/Users/jd/Desktop/work/FLBlockchain/integration/contract_data.json', 'r') as f:
-        data = json.load(f)
-    
-    contract_address = data["address"]
-    contract_abi = data["abi"]
-    listener = IncentiveListener("https://sepolia.infura.io/v3/c0145f17136443228ae9d8ab299d3aac", contract_address, contract_abi)
+    web3endpoint = sys.argv[1]
+    contract_address = sys.argv[2]
+    contract_abi = sys.argv[3]
+    listener = IncentiveListener(web3endpoint, contract_address, contract_abi)
     listener.listen()
