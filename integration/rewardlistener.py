@@ -6,6 +6,7 @@ import json
 import datetime
 import fcntl
 import sys
+import json
 class IncentiveListener(EventHandler):
     def __init__(self, w3, contract_address, contract_abi):
         super().__init__(w3, contract_address, contract_abi)
@@ -16,13 +17,46 @@ class IncentiveListener(EventHandler):
 
     def handle_event(self, event):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open('progresslog.txt', 'a') as f:
+        data = {
+            "timestamp": timestamp,
+            "type": "reward",
+            "message": f"Incentive sent to client: {event.args._trainer}\nReward Amount: {event.args._reward}",
+            "txhash": event.transactionHash.hex()
+        }
+
+        self.append_to_events(data)
+
+        # with open('progresslog.txt', 'a') as f:
+        #     fcntl.flock(f, fcntl.LOCK_EX)  # Acquire an exclusive lock
+        #     f.write(json.dumps(data) + "\n")
+        #     fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock
+    def append_to_events(self, event_json):
+        with open("/Users/jd/Desktop/work/FLBlockchain/serverdata.json", "a+") as f:
             fcntl.flock(f, fcntl.LOCK_EX)  # Acquire an exclusive lock
-            f.write(f"[{timestamp}] Reward Sent! \n \n")
-            f.write(f"Incentive sent to client: {event.args._trainer}\n")
-            f.write(f"Reward Amount: {event.args._reward}\n")
-            f.write(f"Tx Hash: {event.transactionHash.hex()}\n \n \n")
-            fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock
+
+            try:
+                f.seek(0)  # Go to the start of the file
+                server_data = json.load(f)
+
+                # If the "events" key doesn't exist, initialize it to an empty list
+                if 'events' not in server_data:
+                    server_data['events'] = []
+
+                # Append the event_json to the "events" list
+                server_data['events'].append(event_json)
+
+                # Write the updated server data back to the file
+                f.seek(0)
+                json.dump(server_data, f)
+                f.truncate()
+
+            except json.JSONDecodeError:
+                # If the file is empty (and thus not valid JSON), initialize "events" to a list containing the event_json
+                json.dump({'events': [event_json]}, f)
+
+            finally:
+                fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock
+
 
 
 if __name__ == "__main__":

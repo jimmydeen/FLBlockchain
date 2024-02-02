@@ -1,7 +1,5 @@
 from flask import Flask, request, make_response, jsonify, session
 import sys
-sys.path.append('/Users/jd/Desktop/work/FLBlockchain/integration/')
-from coordinatorcontract import CoordinatorContract
 import subprocess
 import os
 import json

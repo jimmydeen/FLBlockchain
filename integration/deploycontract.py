@@ -4,11 +4,18 @@ sys.path.insert(0, '/Users/jd/Desktop/work/FLBlockchain/integration/')
 
 from coordinatorcontract import CoordinatorContract
  
+web3endpoint = sys.argv[1]
+chainid = int(sys.argv[2])
+sender_address = sys.argv[3]
+sender_pk = sys.argv[4]
+incentive = int(sys.argv[5])
+numberUpdatesRequested = int(sys.argv[6])
+maxDataPoints = int(sys.argv[7])
+stake = float(sys.argv[8])
 
 
-
-contract = CoordinatorContract("/Users/jd/Desktop/work/FLBlockchain/integration/SimpleCoordinator.sol", "https://sepolia.infura.io/v3/c0145f17136443228ae9d8ab299d3aac", 11155111, "0x504d73C974b2a9550eBCBFCA78F81AeC01B1c7C6", "2d656220c6b6917ce39055aeace0423d984166c72aa927fd3cea9e147406d072")
-contract.deployContract(10000, 5, 1000, 0.05)
+contract = CoordinatorContract("/Users/jd/Desktop/work/FLBlockchain/integration/SimpleCoordinator.sol", web3endpoint, chainid, sender_address, sender_pk)
+contract.deployContract(incentive, numberUpdatesRequested, maxDataPoints, stake)
 
 # time.sleep(5)
 # Get contract address and abi
