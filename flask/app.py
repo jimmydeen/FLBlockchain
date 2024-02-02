@@ -176,20 +176,14 @@ def deploy_contract():
 
 @app.route('/check_server', methods=['GET'])
 def check_server():
+    server_started = False
     if os.path.exists(SERVER_DATA_FILE):
         with open(SERVER_DATA_FILE, 'r') as f:
             server_data = json.load(f)
-    else:
-        server_data = {
-            'server_started': False,
-            'server_address': None
-        }
+        server_started = server_data.get('server_started', False)
 
-    if server_data['server_started']:
-        return jsonify({
-            'message': 'Server started',
-            'server_address': server_data['server_address']
-        }), 200
+    if server_started:
+        return 'Server started', 200
     else:
         return 'Server not started', 202
 
