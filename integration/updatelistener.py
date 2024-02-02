@@ -28,11 +28,10 @@ class UpdateListener(EventHandler):
         #     # f.write(f"Reward amount: {event.args._reward}\n")
         #     fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock
     def append_to_events(self, event_json):
-        with open("/Users/jd/Desktop/work/FLBlockchain/serverdata.json", "a+") as f:
+        with open("/Users/jd/Desktop/work/FLBlockchain/flask/serverdata.json", "r+") as f:
             fcntl.flock(f, fcntl.LOCK_EX)  # Acquire an exclusive lock
 
             try:
-                f.seek(0)  # Go to the start of the file
                 server_data = json.load(f)
 
                 # If the "events" key doesn't exist, initialize it to an empty list
@@ -49,7 +48,9 @@ class UpdateListener(EventHandler):
 
             except json.JSONDecodeError:
                 # If the file is empty (and thus not valid JSON), initialize "events" to a list containing the event_json
+                f.seek(0)
                 json.dump({'events': [event_json]}, f)
+                f.truncate()
 
             finally:
                 fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock
@@ -58,6 +59,6 @@ class UpdateListener(EventHandler):
 if __name__ == "__main__":
     web3endpoint = sys.argv[1]
     contract_address = sys.argv[2]
-    contract_abi = sys.argv[3]
+    contract_abi = json.loads(sys.argv[3])
     listener = UpdateListener(web3endpoint, contract_address, contract_abi)
     listener.listen()

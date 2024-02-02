@@ -7,6 +7,7 @@ import datetime
 import fcntl
 import sys
 import json
+import datetime
 class IncentiveListener(EventHandler):
     def __init__(self, w3, contract_address, contract_abi):
         super().__init__(w3, contract_address, contract_abi)
@@ -16,7 +17,7 @@ class IncentiveListener(EventHandler):
         
 
     def handle_event(self, event):
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data = {
             "timestamp": timestamp,
             "type": "reward",
@@ -31,11 +32,10 @@ class IncentiveListener(EventHandler):
         #     f.write(json.dumps(data) + "\n")
         #     fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock
     def append_to_events(self, event_json):
-        with open("/Users/jd/Desktop/work/FLBlockchain/serverdata.json", "a+") as f:
+        with open("/Users/jd/Desktop/work/FLBlockchain/flask/serverdata.json", "r+") as f:
             fcntl.flock(f, fcntl.LOCK_EX)  # Acquire an exclusive lock
 
             try:
-                f.seek(0)  # Go to the start of the file
                 server_data = json.load(f)
 
                 # If the "events" key doesn't exist, initialize it to an empty list
@@ -52,7 +52,9 @@ class IncentiveListener(EventHandler):
 
             except json.JSONDecodeError:
                 # If the file is empty (and thus not valid JSON), initialize "events" to a list containing the event_json
+                f.seek(0)
                 json.dump({'events': [event_json]}, f)
+                f.truncate()
 
             finally:
                 fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock
@@ -62,6 +64,6 @@ class IncentiveListener(EventHandler):
 if __name__ == "__main__":
     web3endpoint = sys.argv[1]
     contract_address = sys.argv[2]
-    contract_abi = sys.argv[3]
+    contract_abi = json.loads(sys.argv[3])
     listener = IncentiveListener(web3endpoint, contract_address, contract_abi)
     listener.listen()

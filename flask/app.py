@@ -1,13 +1,16 @@
 from flask import Flask, request, make_response, jsonify, session
+from flask_cors import CORS
+
 import sys
 import subprocess
 import os
 import json
 
 app = Flask(__name__)
+CORS(app)
 # Global variables for demo
 
-SERVER_DATA_FILE = "/Users/jd/Desktop/work/FLBlockchain//server_data.json"
+SERVER_DATA_FILE = "/Users/jd/Desktop/work/FLBlockchain/flask/serverdata.json"
 app.secret_key = "demo"
 
 
@@ -62,9 +65,10 @@ def start_server():
     server_data["server_address"] = server_address
 
     # Load parameters from serverdata, to pass into rewardlistener and updatelistener
-    w3provider = server_data.get("w3provider")
-    contract_address = server_data.get("contract_address")
-    contract_abi = server_data.get("contract_abi")
+    # w3provider = server_data.get("w3provider")
+    w3provider = "https://sepolia.infura.io/v3/c0145f17136443228ae9d8ab299d3aac"
+    contract_address = server_data["contract_address"]
+    contract_abi = json.dumps(server_data["contract_abi"])
     
     if w3provider is None or contract_address is None or contract_abi is None:
         raise ValueError("Missing parameters in server data")
@@ -76,10 +80,11 @@ def start_server():
     subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/updatelistener.py", w3provider, contract_address, contract_abi])
 
     # Start server
-    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py"], server_address)
+    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py", server_address])
     
     with open(SERVER_DATA_FILE, 'w') as f:
         json.dump(server_data, f)
+        
     return 'Server started', 200
 
 # Demo Endpoints
@@ -165,20 +170,19 @@ def deploy_contract():
     with open(SERVER_DATA_FILE, 'w') as f:
         json.dump(server_data, f)
 
-    subprocess.run(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/deploycontract.py", w3provider, str(chain_id), sender_address, private_key, str(incentive), str(numberUpdatesRequested), str(maxDataPoints), str(stake)])
+    # process = subprocess.run(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/deploycontract.py", w3provider, str(chain_id), sender_address, private_key, str(incentive), str(numberUpdatesRequested), str(maxDataPoints), str(stake)], capture_output=True, text = True)
+    process = subprocess.run(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/deploycontract.py"])
+    print(process.stdout)
+    if process.returncode != 0:
+        print(f"Error: deploycontract.py exited with status {process.returncode}")
+    else:
+        print("contract deploy success!")
 
-    # Load contract data
-
-    with open("/Users/jd/Desktop/work/FLBlockchain/integration/contract_data.json", "r") as f:
-        data = json.load(f)
     
-    contract_address = data["address"]
-    contract_abi = data["abi"]
 
-    return jsonify({
-        'contract_address': contract_address,
-        'contract_abi': contract_abi
-    }), 200
+    return "contract deployed", 200
+
+
 
 
 @app.route('/check_server', methods=['GET'])
@@ -196,19 +200,19 @@ def check_server():
 
 @app.route('/get_events', methods=['GET'])
 def get_events():
-    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/progresslog.txt"):
-        with open("/Users/jd/Desktop/work/FLBlockchain/progresslog.txt", 'r') as f:
-            progress = f.read()
-            if progress == "":
+    update_exists = False
+    if os.path.exists(SERVER_DATA_FILE):
+        with open(SERVER_DATA_FILE, 'r') as f:
+            server_data = json.loads(f)
+            updates = server_data.get("events", "")
+            if updates == "":
                 update_exists = False
             else:
                 update_exists = True
 
     if update_exists == True:
 
-        return jsonify({
-            "progresslog": progress
-        }), 200
+        return updates, 200
     else:
         return "No events yet", 202
 

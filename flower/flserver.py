@@ -4,7 +4,7 @@ import matplotlib.ticker as ticker
 import sys
 sys.path.insert(0, '/Users/jd/Desktop/work/FLBlockchain/integration/')
 
-from coordinatorcontract import CoordinatorContract
+# from coordinatorcontract import CoordinatorContract
  
 from demostrategy import DemoStrategy
 strategy = DemoStrategy()
