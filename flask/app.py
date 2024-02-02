@@ -195,39 +195,18 @@ def check_server():
 
 @app.route('/get_events', methods=['GET'])
 def get_events():
-    log_exists = False
-    reward_exists = False
-    update_exists = False
-    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/rewardlog.txt"):
-        with open("/Users/jd/Desktop/work/FLBlockchain/rewardlog.txt", 'r') as f:
-            rewardlog = f.read()
-            if rewardlog == "":
-                reward_exists = False
+    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/progresslog.txt"):
+        with open("/Users/jd/Desktop/work/FLBlockchain/progresslog.txt", 'r') as f:
+            progress = f.read()
+            if progress == "":
+                update_exists = False
             else:
-
-                reward_exists = True
-        #clear file
-        open("/Users/jd/Desktop/work/FLBlockchain/rewardlog.txt", 'w').close()
-            
-
-    if os.path.exists("/Users/jd/Desktop/work/FLBlockchain/log.txt"):
-        with open("/Users/jd/Desktop/work/FLBlockchain/log.txt", 'r') as f:
-            log = f.read()
-            if log == "":
-                log_exists = False
-            else:
-                log_exists = True
-        #clear file
-        open("/Users/jd/Desktop/work/FLBlockchain/log.txt", 'w').close()
-
-    if (log_exists or reward_exists):
-        update_exists = True
+                update_exists = True
 
     if update_exists == True:
 
         return jsonify({
-            'rewardlog': rewardlog,
-            'log': log
+            "progresslog": progress
         }), 200
     else:
         return "No events yet", 202
