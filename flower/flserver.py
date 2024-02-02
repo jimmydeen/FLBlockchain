@@ -14,7 +14,7 @@ strategy = DemoStrategy()
 
 # Start Flower server
 fl.server.start_server(
-  server_address="127.0.0.1:7545",
+  server_address=sys.argv[1],
   config=fl.server.ServerConfig(num_rounds=5), strategy=strategy
 )
 # Plot

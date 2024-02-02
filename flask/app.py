@@ -78,7 +78,7 @@ def start_server():
     subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/updatelistener.py", w3provider, contract_address, contract_abi])
 
     # Start server
-    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py"])
+    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py"], server_address)
     
     with open(SERVER_DATA_FILE, 'w') as f:
         json.dump(server_data, f)
