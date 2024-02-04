@@ -13,6 +13,7 @@ class UpdateListener(EventHandler):
     def handle_event(self, event):
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data = {
+            "client_id" : event.args._trainer,
             "timestamp": timestamp,
             "type": "update",
             "message": f"Update received from client: {event.args._trainer}\n",

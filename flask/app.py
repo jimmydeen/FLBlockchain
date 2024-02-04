@@ -7,7 +7,8 @@ import os
 import json
 
 app = Flask(__name__)
-CORS(app)
+
+CORS(app, always_send = True)
 # Global variables for demo
 
 SERVER_DATA_FILE = "/Users/jd/Desktop/work/FLBlockchain/flask/serverdata.json"
@@ -93,6 +94,9 @@ def start_server():
 def start_client_1():
     _client_address = request.json.get('_client_address')
     _client_pk = request.json.get('_client_pk')
+
+    # Save client address to session to identify client
+    session['client_id'] = _client_address
     # Load data from SERVER_DATA_FILE
     with open(SERVER_DATA_FILE, 'r') as f:
         server_data = json.load(f)
@@ -112,6 +116,8 @@ def start_client_1():
 def start_client_2():
     _client_address = request.json.get('_client_address')
     _client_pk = request.json.get('_client_pk')
+    # Save client address to session to identify client
+    session['client_id'] = _client_address
     with open(SERVER_DATA_FILE, 'r') as f:
         server_data = json.load(f)
     
@@ -130,6 +136,8 @@ def start_client_2():
 def start_client_3():
     _client_address = request.json.get('_client_address')
     _client_pk = request.json.get('_client_pk')
+    # Save client address to session to identify client
+    session['client_id'] = _client_address
     with open(SERVER_DATA_FILE, 'r') as f:
         server_data = json.load(f)
     
@@ -200,10 +208,11 @@ def check_server():
 
 @app.route('/get_events', methods=['GET'])
 def get_events():
+
     update_exists = False
     if os.path.exists(SERVER_DATA_FILE):
         with open(SERVER_DATA_FILE, 'r') as f:
-            server_data = json.loads(f)
+            server_data = json.load(f)
             updates = server_data.get("events", "")
             if updates == "":
                 update_exists = False
@@ -211,10 +220,29 @@ def get_events():
                 update_exists = True
 
     if update_exists == True:
-
+        if updates[-1].get("type") == "completion":
+            return "Training complete", 201
         return updates, 200
     else:
         return "No events yet", 202
 
+
+@app.route('/getClientSummary', methods=['GET'])
+def getClientSummary():
+    client_id = session.get('client_id')
+    if client_id is None:
+        return "No client summary yet", 400
+
+    with open(SERVER_DATA_FILE, 'r') as f:
+        server_data = json.load(f)
+    events = server_data.get("events", [])
+    client_events = [event for event in events if event.get("client_id") == client_id]
+
+    if not client_events:
+        return f"No events for client {client_id} yet", 202
+    return client_events, 200
+
+
+
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=8000)

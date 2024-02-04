@@ -19,6 +19,7 @@ class IncentiveListener(EventHandler):
     def handle_event(self, event):
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data = {
+            "client_id" : event.args._trainer,
             "timestamp": timestamp,
             "type": "reward",
             "message": f"Incentive sent to client: {event.args._trainer}\nReward Amount: {event.args._reward}",
