@@ -22,13 +22,14 @@ class IncentiveListener(EventHandler):
             "client_id" : event.args._trainer,
             "timestamp": timestamp,
             "type": "reward",
-            "message": f"Incentive sent to client: {event.args._trainer}\nReward Amount: {event.args._reward}",
+            "message": f"Incentive sent to client: {event.args._trainer}\n Reward amount: ",
+            "reward": event.args._reward,
             "txhash": event.transactionHash.hex()
         }
 
         self.append_to_events(data)
 
-        # with open('progresslog.txt', 'a') as f:
+        # with open('progresslog.txt', 'a') as f: 
         #     fcntl.flock(f, fcntl.LOCK_EX)  # Acquire an exclusive lock
         #     f.write(json.dumps(data) + "\n")
         #     fcntl.flock(f, fcntl.LOCK_UN)  # Release the lock

@@ -231,7 +231,7 @@ def get_events():
 def getClientSummary():
     client_id = session.get('client_id')
     if client_id is None:
-        return "No client summary yet", 400
+        return jsonify({"error": "No client summary yet"}), 400
 
     with open(SERVER_DATA_FILE, 'r') as f:
         server_data = json.load(f)
@@ -239,8 +239,28 @@ def getClientSummary():
     client_events = [event for event in events if event.get("client_id") == client_id]
 
     if not client_events:
-        return f"No events for client {client_id} yet", 202
-    return client_events, 200
+        return jsonify({"message": f"No events for client {client_id} yet"}), 202
+
+    total_incentive = 0
+    updates_trained = 0
+    client_log = client_events
+
+    # Calculate total incentive and updates trained
+    for event in client_events:
+        if event.get("type") == "reward":
+            total_incentive += event.get("reward", 0)
+        elif event.get("type") == "update":
+            updates_trained += 1
+        
+
+    response = {
+        "client_id": client_id,
+        "total_incentive": total_incentive,
+        "updates_trained": updates_trained,
+        "client_log": client_log
+    }
+
+    return jsonify(response), 200
 
 
 
