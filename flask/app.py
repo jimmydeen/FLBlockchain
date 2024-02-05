@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify, session
+from flask import Flask, request, make_response, jsonify, session, send_file
 from flask_cors import CORS
 
 import sys
@@ -81,8 +81,8 @@ def start_server():
     subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/integration/updatelistener.py", w3provider, contract_address, contract_abi])
 
     # Start server
-    subprocess.Popen(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py", server_address])
-    
+    subprocess.run(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py", server_address])
+    server_data["training_complete"] = True
     with open(SERVER_DATA_FILE, 'w') as f:
         json.dump(server_data, f)
         
@@ -218,10 +218,11 @@ def get_events():
                 update_exists = False
             else:
                 update_exists = True
+    # check for completion
+    if server_data.get("training_complete", False):
+        return "Training complete", 201
 
     if update_exists == True:
-        if updates[-1].get("type") == "completion":
-            return "Training complete", 201
         return updates, 200
     else:
         return "No events yet", 202
@@ -236,7 +237,7 @@ def getClientSummary():
     with open(SERVER_DATA_FILE, 'r') as f:
         server_data = json.load(f)
     events = server_data.get("events", [])
-    client_events = [event for event in events if event.get("client_id") == client_id]
+    client_events = [event for event in events if event.get("client_id") == client_id and "client_id" in event]
 
     if not client_events:
         return jsonify({"message": f"No events for client {client_id} yet"}), 202
@@ -251,7 +252,7 @@ def getClientSummary():
             total_incentive += event.get("reward", 0)
         elif event.get("type") == "update":
             updates_trained += 1
-        
+
 
     response = {
         "client_id": client_id,
@@ -262,7 +263,9 @@ def getClientSummary():
 
     return jsonify(response), 200
 
-
+@app.route('/getPlot', methods=['GET'])
+def getPlot():
+    return send_file('Users/jd/Desktop/work/FLBlockchain/flask/plot.png', mimetype='image/png')
 
 if __name__ == '__main__':
     app.run(port=8000)

@@ -15,3 +15,4 @@ flower/__pycache__/
 /frontend/flbc/node_modules/
 frontend/flbc
 /flask/__pycache__/
+/flask/data

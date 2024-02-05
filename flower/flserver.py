@@ -2,6 +2,7 @@ import flwr as fl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import sys
+from io import BytesIO
 sys.path.insert(0, '/Users/jd/Desktop/work/FLBlockchain/integration/')
 
 # from coordinatorcontract import CoordinatorContract
@@ -38,7 +39,16 @@ plt.gca().yaxis.set_major_formatter(formatPercent)
 plt.title('Accuracy over rounds')
 plt.xlabel('Round')
 plt.ylabel('Accuracy %')
-plt.show()
+# plt.show()
+
+# Save plot to buffer
+buf = BytesIO()
+plt.savefig(buf, format='png')
+buf.seek(0)
+
+# Save buffer to file
+with open('/Users/jd/Desktop/work/FLBlockchain/flask/plot.png', 'wb') as f:
+    f.write(buf.getvalue())
 
 
 
