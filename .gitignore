@@ -16,3 +16,8 @@ flower/__pycache__/
 frontend/flbc
 /flask/__pycache__/
 /flask/data
+.DS_Store
+.DS_Store
+flask/log.txt
+flask/plot.png
+integration/contract_data.json

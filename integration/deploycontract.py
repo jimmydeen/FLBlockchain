@@ -14,7 +14,7 @@ os.chdir("/Users/jd/Desktop/work/FLBlockchain/")
 # maxDataPoints = int(sys.argv[7])
 # stake = float(sys.argv[8])
 contract = CoordinatorContract("/Users/jd/Desktop/work/FLBlockchain/integration/SimpleCoordinator.sol", "https://sepolia.infura.io/v3/c0145f17136443228ae9d8ab299d3aac", 11155111, "0x504d73C974b2a9550eBCBFCA78F81AeC01B1c7C6", "2d656220c6b6917ce39055aeace0423d984166c72aa927fd3cea9e147406d072")
-contract.deployContract(1, 1, 1, 0.0001)
+contract.deployContract(1, 1, 1, 0.5)
 
 # contract = CoordinatorContract("/Users/jd/Desktop/work/FLBlockchain/integration/SimpleCoordinator.sol", web3endpoint, chainid, sender_address, sender_pk)
 # contract.deployContract(incentive, numberUpdatesRequested, maxDataPoints, stake)

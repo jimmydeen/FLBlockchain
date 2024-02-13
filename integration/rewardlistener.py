@@ -22,7 +22,7 @@ class IncentiveListener(EventHandler):
             "client_id" : event.args._trainer,
             "timestamp": timestamp,
             "type": "reward",
-            "message": f"Incentive sent to client: {event.args._trainer}\n Reward amount: ",
+            "message": f"Incentive sent to client: {event.args._trainer}\n Reward amount: {event.args._reward}\n",
             "reward": event.args._reward,
             "txhash": event.transactionHash.hex()
         }

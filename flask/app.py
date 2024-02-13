@@ -64,7 +64,8 @@ def start_server():
     
     server_data["server_started"] = True
     server_data["server_address"] = server_address
-
+    with open(SERVER_DATA_FILE, 'w') as f:
+        json.dump(server_data, f)
     # Load parameters from serverdata, to pass into rewardlistener and updatelistener
     # w3provider = server_data.get("w3provider")
     w3provider = "https://sepolia.infura.io/v3/c0145f17136443228ae9d8ab299d3aac"
@@ -82,6 +83,10 @@ def start_server():
 
     # Start server
     subprocess.run(["python", "/Users/jd/Desktop/work/FLBlockchain/flower/flserver.py", server_address])
+
+    with open (SERVER_DATA_FILE, 'r') as f:
+        server_data = json.load(f)
+    
     server_data["training_complete"] = True
     with open(SERVER_DATA_FILE, 'w') as f:
         json.dump(server_data, f)
@@ -265,7 +270,7 @@ def getClientSummary():
 
 @app.route('/getPlot', methods=['GET'])
 def getPlot():
-    return send_file('Users/jd/Desktop/work/FLBlockchain/flask/plot.png', mimetype='image/png')
+    return send_file('plot.png', mimetype='image/png')
 
 if __name__ == '__main__':
     app.run(port=8000)

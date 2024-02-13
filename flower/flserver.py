@@ -42,13 +42,13 @@ plt.ylabel('Accuracy %')
 # plt.show()
 
 # Save plot to buffer
-buf = BytesIO()
-plt.savefig(buf, format='png')
-buf.seek(0)
+# buf = BytesIO()
+# plt.savefig(buf, format='png')
+# buf.seek(0)
 
-# Save buffer to file
-with open('/Users/jd/Desktop/work/FLBlockchain/flask/plot.png', 'wb') as f:
-    f.write(buf.getvalue())
+# # Save buffer to file
+# with open('/Users/jd/Desktop/work/FLBlockchain/flask/plot.png', 'wb') as f:
+#     f.write(buf.getvalue())
 
 
 
