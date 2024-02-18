@@ -19,36 +19,24 @@ app.secret_key = "demo"
 def download_client():
     _client_address = request.json.get('_client_address')
     _client_pk = request.json.get('_client_pk')
-    _web3_endpoint = request.json.get('_web3_endpoint')
-    _chainid = request.json.get('_chainid')
-    _contract_address = request.json.get('_contract_address')
-    _contract_abi = request.json.get('_contract_abi')
-    server_address = request.json.get('server_address')
+    with open(SERVER_DATA_FILE, 'r') as f:
+            server_data = json.load(f)
+    _web3_endpoint = server_data["w3provider"]
+    _chainid = server_data["chain_id"]
+    _contract_address = server_data["contract_address"]
+    _contract_abi = json.dumps(server_data["contract_abi"])
+    server_address = server_data["server_address"]
 
     script = f"""
-from main import mnist_test_loader_client1, mnist_train_loader_client1
-from flclient import FlowerClient
-import flwr as fl
-import json
 
-class c1(FlowerClient):
-    def __init__(self):
-        super().__init__("{_client_address}", "{_client_pk}", "{_web3_endpoint}", {_chainid}, "{_contract_address}", {_contract_abi})
+    ./download_client {_client_address} {_client_pk} {_web3_endpoint} {_chainid} {_contract_address} {_contract_abi} {server_address} 
 
-    def getTrainLoader(self):
-        return mnist_train_loader_client1
 
-    def getTestLoader(self):
-        return mnist_test_loader_client1
-
-if __name__ == "__main__":
-    client = c1()
-    fl.client.start_numpy_client(server_address="{server_address}", client=client)
     """
 
     response = make_response(script)
     response.headers['Content-Type'] = 'application/octet-stream'
-    response.headers['Content-Disposition'] = 'attachment; filename=client.py'
+    response.headers['Content-Disposition'] = 'attachment; filename=run_client.sh'
 
     return response
 
